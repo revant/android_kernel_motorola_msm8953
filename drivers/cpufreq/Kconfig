@@ -117,10 +117,19 @@ config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	bool "interactive"
 	select CPU_FREQ_GOV_INTERACTIVE
 	help
-	  Use the CPUFreq governor 'interactive' as default. This allows
+         Use the CPUFreq governor 'interactive' as default. This allows
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
+
+config CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE
+        bool "intelliactive"
+        select CPU_FREQ_GOV_INTELLIACTIVE
+        help
+          Based off Google's Interactive governor with the following enhancements:
+          1. self-boost capability from input drivers (no need for PowerHAL assist)
+          2. two phase scheduling (idle/busy phases to prevent from jumping directly to max freq
+          3. Checks for offline cpus and short circuits some unnecessary checks to improve code execution paths.
 
 endchoice
 
@@ -195,6 +204,13 @@ config CPU_FREQ_GOV_INTERACTIVE
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
+
+config CPU_FREQ_GOV_INTELLIACTIVE
+        tristate "intelliactive"
+        depends on CPU_FREQ
+        help
+          If in doubt, say N.
+
 
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
